@@ -5,14 +5,10 @@ language: php
 matrix:
   fast_finish: true
   include:
-    - php: 7.2
+    - php: 7.4
       env: TYPO3_VERSION=^9
-    - php: 7.3
-      env: TYPO3_VERSION=^9 COVERAGE="YES"
     - php: 7.4
-      env: TYPO3_VERSION=^10
-    - php: 7.4
-      env: TYPO3_VERSION=11.5.2
+      env: TYPO3_VERSION=^10 COVERAGE="YES"
     - php: 8.0
       env: TYPO3_VERSION=11.5.2
 
@@ -31,7 +27,7 @@ before_script:
   - phpenv rehash
 
 script:
-  - phpcs -n --standard=PSR2 Classes/
+  - phpcs -n --standard=PSR12 Classes/
   - mkdir -p build/cov
   - >
     if [[ "$COVERAGE" == "YES" ]]; then  .Build/bin/phpunit --whitelist Classes/ --coverage-php=./build/cov/unit.cov --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit/; else .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit/; fi

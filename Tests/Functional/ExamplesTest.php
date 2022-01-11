@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bithost\Pdfviewhelpers\Tests\Functional;
 
 /* * *
@@ -40,7 +42,7 @@ class ExamplesTest extends AbstractFunctionalTest
     /**
      * @test
      */
-    public function testFullFeatureShowCase()
+    public function testFullFeatureShowCase(): void
     {
         $this->setUpPage([$this->getFixturePath('Examples/FullFeatureShowCase.txt')]);
 
@@ -66,7 +68,7 @@ class ExamplesTest extends AbstractFunctionalTest
 
         $this->assertStringContainsStringIgnoringCase('Avoid page break inside', $pages[4]->getText());
 
-        $this->validatePDF($output);
+        $this->assertPDFValidity($output);
 
         //do not assert file equality, because the files generated on the server are not equal to the local files
         //comparing hashes of two locally generated files works however
@@ -78,7 +80,7 @@ class ExamplesTest extends AbstractFunctionalTest
     /**
      * @test
      */
-    public function testBasicUsage()
+    public function testBasicUsage(): void
     {
         $this->setUpPage([$this->getFixturePath('Examples/BasicUsage.txt')]);
 
@@ -94,7 +96,7 @@ class ExamplesTest extends AbstractFunctionalTest
         $this->assertStringContainsStringIgnoringCase('Esteban Gehring, Markus Mächler', $text);
         $this->assertStringContainsStringIgnoringCase('Bithost GmbH', $text);
 
-        $this->validatePDF($output);
+        $this->assertPDFValidity($output);
 
         //$expectedHash = sha1(file_get_contents($this->getFixturePath('Examples/BasicUsage.pdf')));
         //$actualHash = sha1($output);
@@ -104,7 +106,7 @@ class ExamplesTest extends AbstractFunctionalTest
     /**
      * @test
      */
-    public function testExtendExistingPDFs()
+    public function testExtendExistingPDFs(): void
     {
         $this->setUpPage([$this->getFixturePath('Examples/ExtendExistingPDFs.txt')]);
 
@@ -120,7 +122,7 @@ class ExamplesTest extends AbstractFunctionalTest
         $this->assertStringContainsStringIgnoringCase('Here is the HTML header', $text);
         $this->assertStringContainsStringIgnoringCase('Lorem ipsum dolor sit amet', $text);
 
-        $this->validatePDF($output);
+        $this->assertPDFValidity($output);
 
         //$expectedHash = sha1(file_get_contents($this->getFixturePath('Examples/ExtendExistingPDFs.pdf')));
         //$actualHash = sha1($output);
@@ -130,7 +132,7 @@ class ExamplesTest extends AbstractFunctionalTest
     /**
      * @test
      */
-    public function testTableOfContent()
+    public function testTableOfContent(): void
     {
         $this->setUpPage([$this->getFixturePath('Examples/TableOfContent.txt')]);
 
@@ -180,19 +182,16 @@ class ExamplesTest extends AbstractFunctionalTest
     /**
      * @test
      */
-    public function testPDFA()
+    public function testPDFA(): void
     {
         $this->setUpPage([$this->getFixturePath('Examples/PDFA.txt')]);
 
         $output = $this->renderFluidTemplate($this->getFixturePath('Examples/PDFA.html'));
 
-        $this->validatePDF($output);
+        $this->assertPDFValidity($output);
     }
 
-    /**
-     * @param string $pdf
-     */
-    protected function validatePDF($pdf)
+    protected function assertPDFValidity(string $pdf): void
     {
         $client = new Client();
         $response = $client->post('https://www.pdf-online.com/osa/validate.aspx', [
@@ -213,7 +212,7 @@ class ExamplesTest extends AbstractFunctionalTest
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $responseData = json_decode($response->getBody(), true);
+        $responseData = json_decode((string) $response->getBody(), true);
 
         $this->assertArrayHasKey('Result', $responseData);
         $this->assertArrayHasKey('Details', $responseData);

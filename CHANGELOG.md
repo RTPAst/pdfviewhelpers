@@ -3,6 +3,8 @@
 ## 3.0.0 - Not yet released
 
 - Removes deprecated classes EmptyFPDI and EmptyTCPDF
+- Drops support for PHP < 7.4
+- Adds type hints and enforces strict types, [#133](https://github.com/bithost-gmbh/pdfviewhelpers/issues/133)
 
 ## 2.4.0 - December 7, 2021
 

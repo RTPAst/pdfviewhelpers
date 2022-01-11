@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bithost\Pdfviewhelpers\Tests\Functional\ViewHelpers;
 
 /* * *
@@ -41,7 +43,7 @@ class AvoidPageBreakInsideViewHelperTest extends AbstractFunctionalTest
     /**
      * @test
      */
-    public function testPageBreakPossible1()
+    public function testPageBreakPossible1(): void
     {
         $output = $this->renderFluidTemplate(
             $this->getFixturePath('AvoidPageBreakInsideViewHelper/Template.html'),
@@ -63,7 +65,7 @@ class AvoidPageBreakInsideViewHelperTest extends AbstractFunctionalTest
     /**
      * @test
      */
-    public function testPageBreakPossible2()
+    public function testPageBreakPossible2(): void
     {
         $output = $this->renderFluidTemplate(
             $this->getFixturePath('AvoidPageBreakInsideViewHelper/Template.html'),
@@ -85,7 +87,7 @@ class AvoidPageBreakInsideViewHelperTest extends AbstractFunctionalTest
     /**
      * @test
      */
-    public function testImpossibleToAvoid1()
+    public function testImpossibleToAvoid1(): void
     {
         $output = $this->renderFluidTemplate(
             $this->getFixturePath('AvoidPageBreakInsideViewHelper/Template.html'),
@@ -107,7 +109,7 @@ class AvoidPageBreakInsideViewHelperTest extends AbstractFunctionalTest
     /**
      * @test
      */
-    public function testImpossibleToAvoid2()
+    public function testImpossibleToAvoid2(): void
     {
         $output = $this->renderFluidTemplate(
             $this->getFixturePath('AvoidPageBreakInsideViewHelper/Template.html'),
@@ -129,7 +131,7 @@ class AvoidPageBreakInsideViewHelperTest extends AbstractFunctionalTest
     /**
      * @test
      */
-    public function testCustomFont()
+    public function testCustomFont(): void
     {
         $this->setUpPage([$this->getFixturePath('AvoidPageBreakInsideViewHelper/CustomFont.txt')]);
 

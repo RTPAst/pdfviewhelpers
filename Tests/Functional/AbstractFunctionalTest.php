@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bithost\Pdfviewhelpers\Tests\Functional;
 
 /* * *
@@ -28,11 +30,12 @@ namespace Bithost\Pdfviewhelpers\Tests\Functional;
  *  This copyright notice MUST APPEAR in all copies of the script!
  * * */
 
+use Nimut\TestingFramework\Exception\Exception;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Smalot\PdfParser\Document;
 use Smalot\PdfParser\Parser;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * BaseFunctionalTest
@@ -48,15 +51,15 @@ abstract class AbstractFunctionalTest extends FunctionalTestCase
 
     /**
      * 150 words 890 characters
-     *
-     * @var string
      */
-    protected $loremIpsumText = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.';
+    protected string $loremIpsumText = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.';
 
     /**
      * Setup TYPO3 environment
      *
      * @return void
+     *
+     * @throws Exception
      */
     public function setUp(): void
     {
@@ -69,12 +72,8 @@ abstract class AbstractFunctionalTest extends FunctionalTestCase
 
     /**
      * Load TypoScript files
-     *
-     * @param array $typoScriptFiles
-     *
-     * @return void
      */
-    public function setUpPage($typoScriptFiles = [])
+    public function setUpPage(array $typoScriptFiles = []): void
     {
         $baseTypoScripts = [
             __DIR__ . '/../../Configuration/TypoScript/setup.txt',
@@ -87,17 +86,12 @@ abstract class AbstractFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * @param string $templatePath
-     * @param array $variables
-     *
      * @return mixed
      */
-    protected function renderFluidTemplate($templatePath, $variables = [])
+    protected function renderFluidTemplate(string $templatePath, array $variables = [])
     {
-        /** @var ObjectManager $objectManager */
-        $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\ObjectManager::class);
         /** @var StandaloneView $standaloneView */
-        $standaloneView = $objectManager->get(\TYPO3\CMS\Fluid\View\StandaloneView::class);
+        $standaloneView = GeneralUtility::makeInstance(StandaloneView::class);
 
         $standaloneView->setFormat('html');
         $standaloneView->setTemplatePathAndFilename($templatePath);
@@ -106,46 +100,26 @@ abstract class AbstractFunctionalTest extends FunctionalTestCase
         return $standaloneView->render();
     }
 
-    /**
-     * @param string $path
-     *
-     * @return string
-     */
-    protected function getFixturePath($path)
+    protected function getFixturePath(string $path): string
     {
         return __DIR__ . '/Fixtures/' . $path;
     }
 
-    /**
-     * @param string $filename
-     *
-     * @return Document
-     */
-    public function parseFile($filename)
+    public function parseFile(string $filename): Document
     {
         $parser = new Parser();
 
         return $parser->parseFile($filename);
     }
 
-    /**
-     * @param string $content
-     *
-     * @return Document
-     */
-    public function parseContent($content)
+    public function parseContent(string $content): Document
     {
         $parser = new Parser();
 
         return $parser->parseContent($content);
     }
 
-    /**
-     * @param integer $duplicates
-     *
-     * @return string
-     */
-    protected function getLongLoremIpsumText($duplicates)
+    protected function getLongLoremIpsumText(int $duplicates): string
     {
         $longLoremIpsumText = '';
         $duplicates = max($duplicates, 0);
